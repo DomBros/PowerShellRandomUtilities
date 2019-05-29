@@ -81,7 +81,10 @@ $ComputerDataFromLogins = $AllItems | Where-Object {
     $_.Login
 } | ForEach-Object {
     $LoginMain = $_.Login
-    $UserADInfo = Get-ADUser -Identity $_.Login
+    $ComputerData = $null
+    $UserADInfo = Get-ADUser -Filter {
+        SamAccountName -eq $LoginMain
+    }
     
     if ($LoginMain -match '-') {
         $Logins = $_.Login.Split('-')
@@ -92,14 +95,14 @@ $ComputerDataFromLogins = $AllItems | Where-Object {
                     $_.Name -match $Login
                 }
                 
-                $AdditionaData = "PodwojneNazwisko and > 13"
+                $AdditionaData = "DoubleName and > 13"
                 
             } else {
                 $ComputerData = $ComputerNameAll | Where-Object {
                     $_.Name -match $Login
                 }
                 
-                $AdditionaData = 'PodwojneNazwisko'
+                $AdditionaData = 'DoubleName'
                 
             }
             [PSCustomObject]@{
